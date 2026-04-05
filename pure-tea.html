@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PURE TEA — Artisanal Ceylon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --obsidian:    #0A0A0A;
+    --obsidian-2:  #0f0f0f;
+    --gold:        #D4AF37;
+    --gold-bright: #e8c84a;
+    --gold-dim:    rgba(212,175,55,0.14);
+    --gold-line:   rgba(212,175,55,0.28);
+    --cream:       #E0E0E0;
+    --cream-dim:   rgba(224,224,224,0.52);
+    --emerald:     #1B4332;
+    --em-light:    #2D6A4F;
+    --serif:       'Cormorant Garamond', Georgia, serif;
+    --sans:        'Jost', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    background: var(--obsidian);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.75;
+  }
+
+  /* Noise grain overlay */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(52px);
+    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.10s; }
+  .reveal-delay-2 { transition-delay: 0.20s; }
+  .reveal-delay-3 { transition-delay: 0.30s; }
+  .reveal-delay-4 { transition-delay: 0.40s; }
+  .reveal-delay-5 { transition-delay: 0.50s; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 60px 24px 100px;
+    text-align: center;
+  }
+
+  .hero-parallax-bg {
+    position: absolute;
+    inset: -15%;
+    background:
+      radial-gradient(ellipse 85% 60% at 50% 55%, rgba(27,67,50,0.28) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 15% 85%, rgba(212,175,55,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 35% 35% at 85% 12%, rgba(212,175,55,0.06) 0%, transparent 55%);
+    will-change: transform;
+  }
+
+  /* Decorative SVG veins in background */
+  .bg-veins {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-weight: 200;
+    font-size: clamp(8px, 2vw, 10px);
+    letter-spacing: 0.55em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.6s forwards;
+  }
+
+  /* ── TEXT LOGO ── */
+  .hero-logo-wrap {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transform: scale(0.82) translateY(30px);
+    animation: logoReveal 1.8s cubic-bezier(0.16,1,0.3,1) 0.15s forwards;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  @keyframes logoReveal {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* PURE — big bold serif */
+  .logo-pure {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(88px, 28vw, 180px);
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    color: var(--gold);
+    text-shadow:
+      0 0 60px rgba(212,175,55,0.30),
+      0 0 140px rgba(212,175,55,0.12);
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+  }
+
+  /* The P with leaf sprouting from it */
+  .logo-p-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .logo-leaf-sprout {
+    position: absolute;
+    top: -38px;
+    left: 12px;
+  }
+
+  /* TEA — small elegant letters below */
+  .logo-tea {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(22px, 6vw, 44px);
+    letter-spacing: 0.55em;
+    color: var(--gold);
+    opacity: 0.82;
+    text-transform: lowercase;
+    margin-top: -6px;
+    padding-left: 0.55em; /* offset for letter-spacing on last char */
+  }
+
+  /* Gold shimmer animation on logo */
+  .logo-pure {
+    animation: glowPulse 4s ease-in-out infinite 2.2s,
+               logoReveal 1.8s cubic-bezier(0.16,1,0.3,1) 0.15s forwards;
+  }
+
+  .hero-divider {
+    position: relative; z-index: 2;
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    margin: 4px auto 36px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.8s forwards;
+  }
+
+  .hero-tagline {
+    position: relative; z-index: 2;
+    font-family: var(--serif);
+    font-size: clamp(17px, 5vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream);
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.95s forwards;
+  }
+
+  .hero-subtext {
+    position: relative; z-index: 2;
+    font-family: var(--sans);
+    font-size: clamp(9px, 2.6vw, 12px);
+    font-weight: 300;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    max-width: 380px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 1s ease 2.1s forwards;
+  }
+
+  .hero-leaf-art {
+    position: relative; z-index: 2;
+    margin: 56px auto 0;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 2.3s forwards;
+  }
+
+  .scroll-cue {
+    position: absolute; bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 1s ease 2.7s forwards;
+  }
+  .scroll-cue span {
+    font-size: 8px; letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(212,175,55,0.4);
+    font-family: var(--sans); font-weight: 300;
+  }
+  .scroll-cue-line {
+    width: 1px; height: 44px;
+    background: linear-gradient(to bottom, rgba(212,175,55,0.45), transparent);
+    animation: scrollBob 2.2s ease-in-out infinite;
+  }
+  @keyframes scrollBob {
+    0%,100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.08); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SHARED SECTION ─── */
+  section { position: relative; overflow: hidden; }
+
+  .section-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 100px 28px;
+  }
+
+  .section-label {
+    font-family: var(--sans);
+    font-size: 8.5px;
+    font-weight: 400;
+    letter-spacing: 0.48em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 26px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-label::before {
+    content:''; display: block;
+    width: 26px; height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .section-headline {
+    font-family: var(--serif);
+    font-size: clamp(28px, 8.5vw, 52px);
+    font-weight: 600;
+    line-height: 1.08;
+    color: var(--cream);
+    margin-bottom: 32px;
+  }
+  .section-headline em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .section-body {
+    font-family: var(--sans);
+    font-size: clamp(13px, 3.4vw, 15.5px);
+    font-weight: 300;
+    color: var(--cream-dim);
+    line-height: 1.9;
+  }
+  .section-body strong {
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .gold-rule {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-line), transparent);
+  }
+
+  /* ─── SECTION 2: AMBER ─── */
+  #amber {
+    background:
+      radial-gradient(ellipse 90% 50% at 50% 100%, rgba(212,175,55,0.05) 0%, transparent 70%);
+  }
+
+  .amber-comparison {
+    display: flex;
+    gap: 24px;
+    margin-top: 56px;
+    align-items: flex-end;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cup-item {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 14px;
+    flex: 1; min-width: 120px; max-width: 180px;
+  }
+
+  .cup-label {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+  }
+  .cup-label.is-pure { color: var(--gold); }
+
+  .cup-vs {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-style: italic;
+    color: rgba(212,175,55,0.3);
+    padding-bottom: 14px;
+    align-self: center;
+  }
+
+  /* ─── SECTION 3: BENEFITS ─── */
+  #benefits {
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 50%, rgba(27,67,50,0.09) 0%, transparent 65%);
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 52px;
+    border: 1px solid var(--gold-line);
+  }
+
+  .benefit-card {
+    padding: 36px 24px;
+    border: 1px solid rgba(212,175,55,0.13);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.45s ease;
+    cursor: default;
+  }
+  .benefit-card::before {
+    content:''; position: absolute; inset: 0;
+    background: var(--gold-dim);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+  .benefit-card:hover::before { opacity: 1; }
+
+  .benefit-num {
+    font-family: var(--serif);
+    font-size: 48px;
+    font-weight: 300;
+    color: rgba(212,175,55,0.18);
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+
+  .benefit-icon {
+    margin-bottom: 12px;
+  }
+
+  .benefit-title {
+    font-family: var(--serif);
+    font-size: clamp(15px, 4vw, 19px);
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 10px;
+    line-height: 1.2;
+    position: relative; z-index: 1;
+  }
+
+  .benefit-body {
+    font-family: var(--sans);
+    font-size: clamp(11px, 2.8vw, 12.5px);
+    font-weight: 300;
+    color: var(--cream-dim);
+    line-height: 1.75;
+    position: relative; z-index: 1;
+  }
+
+  /* ─── SECTION 4: RITUAL ─── */
+  #ritual {
+    background:
+      radial-gradient(ellipse 65% 60% at 20% 50%, rgba(27,67,50,0.13) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 45% at 80% 70%, rgba(212,175,55,0.04) 0%, transparent 60%);
+  }
+
+  .brew-steps {
+    margin-top: 56px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brew-step {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 0 24px;
+    align-items: start;
+    padding: 32px 0;
+    border-bottom: 1px solid rgba(212,175,55,0.10);
+    position: relative;
+  }
+  .brew-step:last-child { border-bottom: none; }
+
+  .step-left {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 10px;
+    padding-top: 3px;
+  }
+
+  .step-num {
+    font-family: var(--sans);
+    font-size: 8px; font-weight: 400;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+  }
+
+  .step-icon-ring {
+    width: 48px; height: 48px;
+    border: 1px solid var(--gold-line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(212,175,55,0.04);
+    transition: background 0.4s, border-color 0.4s;
+  }
+  .brew-step:hover .step-icon-ring {
+    background: var(--gold-dim);
+    border-color: rgba(212,175,55,0.5);
+  }
+
+  .step-content { padding-top: 3px; }
+
+  .step-title {
+    font-family: var(--serif);
+    font-size: clamp(20px, 5.5vw, 28px);
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .step-body {
+    font-family: var(--sans);
+    font-size: clamp(12px, 3vw, 14px);
+    font-weight: 300;
+    color: var(--cream-dim);
+    line-height: 1.7;
+  }
+
+  /* ─── SECTION 5: PROMISE ─── */
+  #promise {
+    text-align: center;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(27,67,50,0.15) 0%, transparent 70%);
+  }
+
+  #promise .section-inner {
+    padding-top: 110px;
+    padding-bottom: 60px;
+  }
+
+  .promise-quote {
+    font-family: var(--serif);
+    font-size: clamp(20px, 5.5vw, 32px);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.55;
+    max-width: 540px;
+    margin: 0 auto 20px;
+  }
+  .promise-quote em { color: var(--gold); font-style: normal; }
+
+  .promise-attr {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: rgba(212,175,55,0.4);
+    margin-top: 24px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid rgba(212,175,55,0.12);
+    padding: 44px 28px;
+    text-align: center;
+  }
+
+  .footer-logo-text {
+    font-family: var(--serif);
+    font-size: clamp(22px, 6vw, 32px);
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(212,175,55,0.35);
+    margin-bottom: 28px;
+  }
+
+  .footer-rule {
+    width: 40px; height: 1px;
+    background: var(--gold-line);
+    margin: 20px auto;
+  }
+
+  .footer-copy {
+    font-family: var(--sans);
+    font-size: 10px;
+    color: rgba(224,224,224,0.2);
+    letter-spacing: 0.2em;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 480px) {
+    .benefits-grid {
+      grid-template-columns: 1fr;
+    }
+    .benefit-card {
+      padding: 28px 20px;
+    }
+    .section-inner {
+      padding: 80px 20px;
+    }
+    .brew-step {
+      grid-template-columns: 58px 1fr;
+      gap: 0 16px;
+    }
+    .step-icon-ring {
+      width: 42px; height: 42px;
+    }
+    .amber-comparison {
+      gap: 16px;
+    }
+  }
+
+  /* ─── GOLD GLOW PULSE on logo ─── */
+  @keyframes glowPulse {
+    0%,100% { filter: drop-shadow(0 0 40px rgba(212,175,55,0.18)) drop-shadow(0 0 90px rgba(212,175,55,0.08)); }
+    50%      { filter: drop-shadow(0 0 60px rgba(212,175,55,0.32)) drop-shadow(0 0 130px rgba(212,175,55,0.14)); }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     SECTION 1 — HERO
+════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-parallax-bg" id="heroBg"></div>
+
+  <!-- Decorative leaf veins -->
+  <svg class="bg-veins" viewBox="0 0 400 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M200 0 Q220 200 180 400 Q160 600 200 800" stroke="#D4AF37" stroke-width="1" fill="none"/>
+    <path d="M200 200 Q260 220 300 260" stroke="#D4AF37" stroke-width="0.5" fill="none"/>
+    <path d="M200 220 Q140 240 100 280" stroke="#D4AF37" stroke-width="0.5" fill="none"/>
+    <path d="M195 320 Q255 338 295 375" stroke="#D4AF37" stroke-width="0.5" fill="none"/>
+    <path d="M195 335 Q135 355 92 395" stroke="#D4AF37" stroke-width="0.5" fill="none"/>
+    <path d="M198 440 Q258 458 290 498" stroke="#D4AF37" stroke-width="0.4" fill="none"/>
+    <path d="M198 455 Q138 475 100 510" stroke="#D4AF37" stroke-width="0.4" fill="none"/>
+    <path d="M200 560 Q250 575 285 610" stroke="#D4AF37" stroke-width="0.3" fill="none"/>
+    <path d="M200 572 Q148 588 110 625" stroke="#D4AF37" stroke-width="0.3" fill="none"/>
+  </svg>
+
+  <p class="hero-eyebrow">Artisanal Ceylon &bull; Hand-Crafted Whole Leaf</p>
+
+    <div class="hero-logo-wrap">
+    <!-- Leaf sprouting from P -->
+    <div class="logo-pure">
+      <span class="logo-p-wrap">
+        <!-- Tea leaf SVG sprout above the P -->
+        <svg class="logo-leaf-sprout" width="72" height="88" viewBox="0 0 72 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Stem -->
+          <path d="M36 88 Q34 55 36 8" stroke="#1B4332" stroke-width="2" fill="none"/>
+          <!-- Large leaf right -->
+          <path d="M36 8 Q66 26 62 52 Q58 74 36 84 Q14 74 10 52 Q6 26 36 8Z" fill="rgba(27,67,50,0.22)" stroke="#2D6A4F" stroke-width="1.2"/>
+          <!-- Small top leaf left -->
+          <path d="M36 8 Q18 -2 8 14 Q16 18 36 8Z" fill="rgba(27,67,50,0.35)" stroke="#2D6A4F" stroke-width="1"/>
+          <!-- Gold veins -->
+          <path d="M36 8 Q36 46 36 84" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.55"/>
+          <path d="M36 26 Q52 33 57 46" stroke="#D4AF37" stroke-width="0.5" fill="none" opacity="0.4"/>
+          <path d="M36 27 Q20 34 15 47" stroke="#D4AF37" stroke-width="0.5" fill="none" opacity="0.4"/>
+          <path d="M36 46 Q50 52 54 63" stroke="#D4AF37" stroke-width="0.4" fill="none" opacity="0.35"/>
+          <path d="M36 47 Q22 53 18 64" stroke="#D4AF37" stroke-width="0.4" fill="none" opacity="0.35"/>
+          <path d="M36 64 Q47 69 50 78" stroke="#D4AF37" stroke-width="0.35" fill="none" opacity="0.3"/>
+          <path d="M36 65 Q25 70 22 79" stroke="#D4AF37" stroke-width="0.35" fill="none" opacity="0.3"/>
+        </svg>
+        P
+      </span><span>URE</span>
+    </div>
+    <!-- Small italic "tea" beneath -->
+    <div class="logo-tea">tea</div>
+  </div>
+
+  <div class="hero-divider"></div>
+
+  <p class="hero-tagline reveal">"The Purest Expression of Ceylon Tea."</p>
+  <p class="hero-subtext reveal reveal-delay-1">Hand-picked &nbsp;&bull;&nbsp; Sun-dried &nbsp;&bull;&nbsp; Whole-leaf<br>No dust &nbsp;&bull;&nbsp; No dyes &nbsp;&bull;&nbsp; No compromises</p>
+
+  <!-- Artistic Leaf SVG -->
+  <div class="hero-leaf-art">
+    <svg width="80" height="110" viewBox="0 0 80 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stem -->
+      <path d="M40 110 Q38 70 40 10" stroke="#1B4332" stroke-width="1.5" fill="none"/>
+      <!-- Main leaf shape -->
+      <path d="M40 10 Q72 32 68 64 Q64 90 40 100 Q16 90 12 64 Q8 32 40 10Z" fill="rgba(27,67,50,0.18)" stroke="#1B4332" stroke-width="1"/>
+      <!-- Gold veins -->
+      <path d="M40 10 Q41 55 40 100" stroke="#D4AF37" stroke-width="0.6" fill="none" opacity="0.5"/>
+      <path d="M40 30 Q55 38 62 52" stroke="#D4AF37" stroke-width="0.4" fill="none" opacity="0.4"/>
+      <path d="M40 32 Q25 40 18 54" stroke="#D4AF37" stroke-width="0.4" fill="none" opacity="0.4"/>
+      <path d="M40 50 Q53 57 58 70" stroke="#D4AF37" stroke-width="0.35" fill="none" opacity="0.35"/>
+      <path d="M40 52 Q27 59 22 72" stroke="#D4AF37" stroke-width="0.35" fill="none" opacity="0.35"/>
+      <path d="M40 70 Q50 76 54 86" stroke="#D4AF37" stroke-width="0.3" fill="none" opacity="0.3"/>
+      <path d="M40 71 Q30 77 26 87" stroke="#D4AF37" stroke-width="0.3" fill="none" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-cue-line"></div>
+  </div>
+</section>
+
+<!-- RULE -->
+<div style="padding: 0 28px;"><div class="gold-rule"></div></div>
+
+<!-- ════════════════════════════════════════
+     SECTION 2 — GOLDEN AMBER
+════════════════════════════════════════ -->
+<section id="amber">
+  <div class="section-inner">
+    <div class="section-label reveal">The Science of Clarity</div>
+    <h2 class="section-headline reveal reveal-delay-1">
+      Don't Judge by the Color.<br><em>Feel the Soul of the Leaf.</em>
+    </h2>
+    <p class="section-body reveal reveal-delay-2">
+      Commercial tea dust is crushed to provide instant, dark, bitter infusions.
+      <strong>PURE Tea is different.</strong> Because we preserve the whole leaf and dry it
+      naturally under the sun, our infusion is a <strong>Clear Golden Amber.</strong>
+      This clarity is the ultimate hallmark of purity — it means you are tasting
+      100% natural antioxidants, not burnt sediment or artificial coloring.
+    </p>
+
+    <!-- Cup Comparison Visual -->
+    <div class="amber-comparison reveal reveal-delay-3">
+      <div class="cup-item">
+        <p class="cup-label">Commercial dust</p>
+        <!-- Dark tea cup SVG -->
+        <svg width="90" height="110" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18 L22 95 Q22 100 45 100 Q68 100 68 95 L75 18Z" fill="rgba(40,18,8,0.85)" stroke="rgba(224,224,224,0.15)" stroke-width="1"/>
+          <ellipse cx="45" cy="18" rx="30" ry="7" fill="rgba(55,22,8,0.9)" stroke="rgba(224,224,224,0.15)" stroke-width="1"/>
+          <!-- Dark tea surface -->
+          <ellipse cx="45" cy="18" rx="27" ry="5.5" fill="#3D1A08"/>
+          <!-- Handle -->
+          <path d="M68 40 Q82 40 82 55 Q82 70 68 70" stroke="rgba(224,224,224,0.12)" stroke-width="1.5" fill="none"/>
+          <!-- Steam -->
+          <path d="M35 10 Q37 2 35 -5" stroke="rgba(100,60,30,0.3)" stroke-width="1" fill="none"/>
+          <path d="M45 8 Q47 0 45 -7" stroke="rgba(100,60,30,0.3)" stroke-width="1" fill="none"/>
+          <path d="M55 10 Q57 2 55 -5" stroke="rgba(100,60,30,0.3)" stroke-width="1" fill="none"/>
+        </svg>
+        <p class="cup-label" style="font-size:8px; opacity:0.5;">Dark &bull; Bitter</p>
+      </div>
+
+      <p class="cup-vs">vs</p>
+
+      <div class="cup-item">
+        <p class="cup-label is-pure">PURE Tea</p>
+        <!-- Golden amber cup SVG -->
+        <svg width="90" height="110" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Cup glow -->
+          <ellipse cx="45" cy="58" rx="34" ry="50" fill="rgba(212,175,55,0.06)"/>
+          <path d="M15 18 L22 95 Q22 100 45 100 Q68 100 68 95 L75 18Z" fill="rgba(212,175,55,0.10)" stroke="rgba(212,175,55,0.35)" stroke-width="1"/>
+          <ellipse cx="45" cy="18" rx="30" ry="7" fill="rgba(212,175,55,0.12)" stroke="rgba(212,175,55,0.35)" stroke-width="1"/>
+          <!-- Golden amber liquid surface -->
+          <ellipse cx="45" cy="18" rx="27" ry="5.5" fill="rgba(212,175,55,0.55)"/>
+          <!-- Handle -->
+          <path d="M68 40 Q82 40 82 55 Q82 70 68 70" stroke="rgba(212,175,55,0.3)" stroke-width="1.5" fill="none"/>
+          <!-- Light refraction -->
+          <path d="M28 30 Q35 35 28 40" stroke="rgba(212,175,55,0.2)" stroke-width="0.8" fill="none"/>
+          <!-- Steam golden -->
+          <path d="M35 10 Q37 2 35 -5" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+          <path d="M45 8 Q47 0 45 -7" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+          <path d="M55 10 Q57 2 55 -5" stroke="rgba(212,175,55,0.3)" stroke-width="1" fill="none"/>
+        </svg>
+        <p class="cup-label is-pure" style="font-size:8px;">Clear &bull; Pure &bull; Alive</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RULE -->
+<div style="padding: 0 28px;"><div class="gold-rule"></div></div>
+
+<!-- ════════════════════════════════════════
+     SECTION 3 — BENEFITS
+════════════════════════════════════════ -->
+<section id="benefits">
+  <div class="section-inner">
+    <div class="section-label reveal">The Difference</div>
+    <h2 class="section-headline reveal reveal-delay-1">
+      Why <em>PURE?</em>
+    </h2>
+
+    <div class="benefits-grid">
+
+      <div class="benefit-card reveal reveal-delay-1">
+        <div class="benefit-num">01</div>
+        <div class="benefit-icon">
+          <!-- Antioxidant icon -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="12" stroke="#D4AF37" stroke-width="1" fill="none"/>
+            <path d="M14 6 Q18 10 18 14 Q18 18 14 22 Q10 18 10 14 Q10 10 14 6Z" fill="rgba(212,175,55,0.15)" stroke="#D4AF37" stroke-width="0.8"/>
+            <circle cx="14" cy="14" r="2" fill="#D4AF37"/>
+          </svg>
+        </div>
+        <div class="benefit-title">High Antioxidant Retention</div>
+        <div class="benefit-body">Sun-drying preserves the natural polyphenols that industrial heat destroys. Every sip is medicine the way nature intended.</div>
+      </div>
+
+      <div class="benefit-card reveal reveal-delay-2">
+        <div class="benefit-num">02</div>
+        <div class="benefit-icon">
+          <!-- Relaxation / wave icon -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 14 Q8 8 14 14 Q20 20 24 14" stroke="#D4AF37" stroke-width="1.2" fill="none"/>
+            <path d="M4 10 Q8 4 14 10 Q20 16 24 10" stroke="#D4AF37" stroke-width="0.6" fill="none" opacity="0.4"/>
+            <path d="M4 18 Q8 12 14 18 Q20 24 24 18" stroke="#D4AF37" stroke-width="0.6" fill="none" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="benefit-title">Natural Relaxation</div>
+        <div class="benefit-body">Whole leaves release L-Theanine slowly for a calm, sustained energy — not the anxious caffeine spike of broken dust.</div>
+      </div>
+
+      <div class="benefit-card reveal reveal-delay-3">
+        <div class="benefit-num">03</div>
+        <div class="benefit-icon">
+          <!-- Zero bitterness / leaf icon -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 4 Q22 10 20 18 Q18 24 14 26 Q10 24 8 18 Q6 10 14 4Z" fill="rgba(27,67,50,0.3)" stroke="#1B4332" stroke-width="1"/>
+            <path d="M14 4 Q14 15 14 26" stroke="#D4AF37" stroke-width="0.8" fill="none" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="benefit-title">Zero Bitterness</div>
+        <div class="benefit-body">Whole leaves don't release tannins as aggressively as crushed dust. The result is a clean, round flavour with a lingering sweetness.</div>
+      </div>
+
+      <div class="benefit-card reveal reveal-delay-4">
+        <div class="benefit-num">04</div>
+        <div class="benefit-icon">
+          <!-- Eco icon -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="12" stroke="#1B4332" stroke-width="1" fill="none"/>
+            <path d="M14 22 Q14 14 22 10" stroke="#2D6A4F" stroke-width="1" fill="none"/>
+            <path d="M14 22 Q14 14 6 10" stroke="#2D6A4F" stroke-width="1" fill="none"/>
+            <circle cx="14" cy="22" r="2" fill="#1B4332"/>
+          </svg>
+        </div>
+        <div class="benefit-title">Eco-Artisanal</div>
+        <div class="benefit-body">Small-batch production with zero industrial carbon footprint. Made with care for the land that gives us the leaf.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RULE -->
+<div style="padding: 0 28px;"><div class="gold-rule"></div></div>
+
+<!-- ════════════════════════════════════════
+     SECTION 4 — BREWING RITUAL
+════════════════════════════════════════ -->
+<section id="ritual">
+  <div class="section-inner">
+    <div class="section-label reveal">The Craft</div>
+    <h2 class="section-headline reveal reveal-delay-1">
+      The Brewing <em>Ritual</em>
+    </h2>
+
+    <div class="brew-steps">
+
+      <div class="brew-step reveal reveal-delay-1">
+        <div class="step-left">
+          <span class="step-num">01</span>
+          <div class="step-icon-ring">
+            <!-- Boil icon: flame + droplets -->
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 18 Q6 14 8 9 Q10 12 11 10 Q12 8 14 6 Q15 11 13 14 Q16 12 15 9 Q18 13 16 18 Q14 20 11 20Z" fill="rgba(212,175,55,0.2)" stroke="#D4AF37" stroke-width="0.9" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">BOIL</div>
+          <div class="step-body">Bring fresh, cold water to a full rolling boil — 100°C. The purity of your water is the foundation of your cup.</div>
+        </div>
+      </div>
+
+      <div class="brew-step reveal reveal-delay-2">
+        <div class="step-left">
+          <span class="step-num">02</span>
+          <div class="step-icon-ring">
+            <!-- Infuse icon: leaf in cup -->
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 8 L5.5 18 Q5.5 20 11 20 Q16.5 20 16.5 18 L18 8Z" stroke="#D4AF37" stroke-width="0.9" fill="rgba(212,175,55,0.08)"/>
+              <path d="M11 4 Q14 7 13 10 Q11 13 11 17" stroke="#1B4332" stroke-width="1" fill="none"/>
+              <path d="M11 4 Q8 7 9 10" stroke="#1B4332" stroke-width="0.7" fill="none"/>
+            </svg>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">INFUSE</div>
+          <div class="step-body">Add a few whole leaves to your cup or pot. Cover and allow to infuse for 3–5 minutes. Patience is part of the ritual.</div>
+        </div>
+      </div>
+
+      <div class="brew-step reveal reveal-delay-3">
+        <div class="step-left">
+          <span class="step-num">03</span>
+          <div class="step-icon-ring">
+            <!-- Bloom icon: expanding leaf -->
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="8" stroke="rgba(212,175,55,0.2)" stroke-width="0.5" fill="none"/>
+              <path d="M11 3 Q16 7 15 12 Q14 16 11 18 Q8 16 7 12 Q6 7 11 3Z" fill="rgba(27,67,50,0.25)" stroke="#2D6A4F" stroke-width="0.9"/>
+              <path d="M11 3 L11 18" stroke="#D4AF37" stroke-width="0.5" fill="none" opacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">BLOOM</div>
+          <div class="step-body">Watch the leaves breathe and expand back to their original form. This is the bloom — nature reclaiming its shape.</div>
+        </div>
+      </div>
+
+      <div class="brew-step reveal reveal-delay-4">
+        <div class="step-left">
+          <span class="step-num">04</span>
+          <div class="step-icon-ring">
+            <!-- Re-steep icon: cycle -->
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 11 A6 6 0 0 1 17 11" stroke="#D4AF37" stroke-width="1" fill="none"/>
+              <path d="M17 11 A6 6 0 0 1 5 11" stroke="#D4AF37" stroke-width="1" fill="none" opacity="0.35"/>
+              <path d="M15 8 L17 11 L14 11" stroke="#D4AF37" stroke-width="0.9" fill="none"/>
+            </svg>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">RE-STEEP</div>
+          <div class="step-body">Don't discard the leaves. They are potent enough for a second, equally rewarding infusion. True luxury wastes nothing.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RULE -->
+<div style="padding: 0 28px;"><div class="gold-rule"></div></div>
+
+<!-- ════════════════════════════════════════
+     SECTION 5 — THE PROMISE
+════════════════════════════════════════ -->
+<section id="promise">
+  <div class="section-inner">
+    <div class="section-label reveal" style="justify-content:center;">The Artisanal Promise</div>
+
+    <!-- Decorative leaf -->
+    <div style="text-align:center; margin: 16px 0 40px;" class="reveal reveal-delay-1">
+      <svg width="44" height="60" viewBox="0 0 44 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 2 Q38 14 36 32 Q34 48 22 58 Q10 48 8 32 Q6 14 22 2Z" fill="rgba(27,67,50,0.2)" stroke="rgba(27,67,50,0.7)" stroke-width="1"/>
+        <path d="M22 2 Q22 30 22 58" stroke="rgba(212,175,55,0.4)" stroke-width="0.7" fill="none"/>
+        <path d="M22 18 Q30 22 34 30" stroke="rgba(212,175,55,0.3)" stroke-width="0.5" fill="none"/>
+        <path d="M22 19 Q14 23 10 31" stroke="rgba(212,175,55,0.3)" stroke-width="0.5" fill="none"/>
+        <path d="M22 34 Q29 37 32 44" stroke="rgba(212,175,55,0.25)" stroke-width="0.4" fill="none"/>
+        <path d="M22 35 Q15 38 12 45" stroke="rgba(212,175,55,0.25)" stroke-width="0.4" fill="none"/>
+      </svg>
+    </div>
+
+    <blockquote class="promise-quote reveal reveal-delay-2">
+      "We are currently perfecting our small-batch process to ensure every jar meets our standard of <em>purity.</em>
+      This is not just tea — it is a ritual of clarity."
+    </blockquote>
+
+    <div class="promise-attr reveal reveal-delay-3">— Ama's Artisanal Tea &nbsp;&bull;&nbsp; Ceylon</div>
+
+    <!-- Final decorative line -->
+    <div style="width:1px; height:80px; background: linear-gradient(to bottom, rgba(212,175,55,0.3), transparent); margin: 60px auto 0;" class="reveal reveal-delay-4"></div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo-text">PURE TEA</div>
+  <div class="footer-sub">Artisanal Ceylon &nbsp;&bull;&nbsp; Hand-Crafted Whole Leaf</div>
+  <div class="footer-rule"></div>
+  <div class="footer-copy">&copy; Ama's Artisanal Tea &nbsp;&mdash;&nbsp; Ceylon</div>
+</footer>
+
+<script>
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => io.observe(el));
+
+  // ── PARALLAX on HERO BG ──
+  const heroBg = document.getElementById('heroBg');
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        heroBg.style.transform = `translateY(${y * 0.25}px)`;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>
